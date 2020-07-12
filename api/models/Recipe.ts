@@ -1,9 +1,12 @@
-import mongoose from 'mongoose'
+import mongoose, { SchemaDefinition } from 'mongoose'
 const Schema = mongoose.Schema
 
-const recipe = {
+const recipe: SchemaDefinition = {
+  ingredients: { type: String },
+  preparation: { type: String },
+  additionalInformation: { type: String },
   category: { type: String },
-  subcategories: { type: [String] }
+  subcategory: { type: String }
 }
 
 const recipeSchema = new Schema(recipe)

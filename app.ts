@@ -7,12 +7,8 @@ import indexRouter from './routes/index'
 
 dotenv.config()
 
-mongodb.startConnection().then((response) => {
-    if (response != undefined) {
-      console.log('MongoDB successfully connected')
-    } else {
-      console.log('Undefined connection data')
-    }
+mongodb.start().then(() => {
+    console.log('MongoDB successfully connected')
   }).catch(() => {
     console.log('Failed to try to connect to MongoDB')
   })
