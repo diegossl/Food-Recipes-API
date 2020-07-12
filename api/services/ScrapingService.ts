@@ -1,19 +1,32 @@
-import Axios from 'axios'
+import Axios, { AxiosResponse } from 'axios'
+import MongoDB from './MongoDBService'
+import mongoose from 'mongoose'
 import Cheerio from 'cheerio'
+import MongoDBService from './MongoDBService'
 
-const url = 'https://www.tudogostoso.com.br/categorias'
-
-interface DataObject {}
+const BaseUrl = 'https://www.tudogostoso.com.br'
 
 export default {
-  async getCategories (): Promise<DataObject> {
-    const pageData = await Axios.get(url)
-    const $ = Cheerio.load(pageData.data)
-    const data: DataObject  = []
+  async getRecipes (): Promise<typeof mongoose | undefined> {
+    const con: MongoDBService = MongoDB.getInstance()
+    return await con.getConnection()
+  },
 
-    $('.page-tags > .row').map((i, dataBlock) => {
-      const link = $(dataBlock).find('h3 > a').attr('href')
-      data.push({ link: link })
+  async getCategories (): Promise<Cheerio[]> {
+    const categoryData: AxiosResponse = await Axios.get(`${BaseUrl}/categorias`)
+    const $: CheerioStatic = Cheerio.load(categoryData.data)
+  
+    const data: Cheerio[] = $('.page-tags > .row')
+      .map((index: number, category: CheerioElement) => {
+        const title: string = $(category).find('h2').text().replace(/\n/g, '')
+        const links: Cheerio[] = $(category)
+          .find('h3')
+          .map((index: number, subcategory: CheerioElement) => {
+            const link: string | undefined = $(subcategory).find('a').attr('href')
+            return link
+          }).get()
+        const response: unknown = { category: title, subcategories: links }
+        return response
     }).get()
     
     return data
