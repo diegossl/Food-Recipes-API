@@ -1,12 +1,12 @@
 import app from '../app'
 import debug from 'debug'
-import http from 'http'
+import http, { Server } from 'http'
 
 const port ='3000'
 
 app.set('port', '3000')
 
-const server = http.createServer(app)
+const server: Server = http.createServer(app)
 
 server.listen(port)
 server.on('error', onError)
@@ -16,7 +16,7 @@ function onError(error: { syscall: string; code: unknown; }) {
   if (error.syscall !== 'listen') {
     throw error
   }
-  const bind = typeof port === 'string'
+  const bind: string = typeof port === 'string'
     ? 'Pipe ' + port
     : 'Port ' + port
   switch (error.code) {
@@ -35,7 +35,7 @@ function onError(error: { syscall: string; code: unknown; }) {
 
 function onListening() {
   const addr = server.address()
-  const bind = typeof addr === 'string'
+  const bind: string = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr?.port
   debug('Listening on ' + bind)

@@ -1,8 +1,8 @@
-import express from 'express'
-import Gateway from '../api/Gateway'
+import express, { Router } from 'express'
+import RecipeController from '../api/RecipeController'
 
-const router = express.Router()
+const router: Router = express.Router()
 
-router.get('/', Gateway.index)
+router.get('/', RecipeController.getRecipes)
 
 export default router
