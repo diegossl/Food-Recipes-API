@@ -1,5 +1,5 @@
-import Mongoose from 'mongoose'
-const Schema = Mongoose.Schema
+import mongoose from 'mongoose'
+const Schema = mongoose.Schema
 
 const recipe = {
   category: { type: String },
@@ -8,4 +8,4 @@ const recipe = {
 
 const recipeSchema = new Schema(recipe)
 
-export default Mongoose.model('Recipe', recipeSchema)
+export default mongoose.model('Recipe', recipeSchema)

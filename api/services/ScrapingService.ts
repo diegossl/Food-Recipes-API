@@ -1,15 +1,11 @@
 import Axios, { AxiosResponse } from 'axios'
-import MongoDB from './MongoDBService'
-import mongoose from 'mongoose'
 import Cheerio from 'cheerio'
-import MongoDBService from './MongoDBService'
 
 const BaseUrl = 'https://www.tudogostoso.com.br'
 
 export default {
-  async getRecipes (): Promise<typeof mongoose | undefined> {
-    const con: MongoDBService = MongoDB.getInstance()
-    return await con.getConnection()
+  async getRecipes (): Promise<void> {
+    return
   },
 
   async getCategories (): Promise<Cheerio[]> {
