@@ -7,9 +7,13 @@ const BaseUrl = 'https://www.tudogostoso.com.br'
 class ScrapingService {
 
   public async getRecipes (): Promise<IRecipe> {
+    const categories: Cheerio[] = await this.getCategories()
+    categories.map((category: Cheerio) => {
+      console.log(category)
+    })
     const recipe: IRecipe = {
-      ingredients: 'string',
-      preparation: 'string',
+      ingredients: ['string'],
+      preparation: ['string'],
       additionalInformation: 'string',
       category: 'string',
       subcategory: 'string'
