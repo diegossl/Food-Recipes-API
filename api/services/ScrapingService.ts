@@ -1,15 +1,23 @@
 import Axios, { AxiosResponse } from 'axios'
+import IRecipe from '../interfaces/IRecipe'
 import Cheerio from 'cheerio'
 
 const BaseUrl = 'https://www.tudogostoso.com.br'
 
-export default {
-  async getRecipes (): Promise<void> {
-    // const categories: Cheerio[] = await this.getCategories()
-    return
-  },
+class ScrapingService {
 
-  async getCategories (): Promise<Cheerio[]> {
+  public async getRecipes (): Promise<IRecipe> {
+    const recipe: IRecipe = {
+      ingredients: 'string',
+      preparation: 'string',
+      additionalInformation: 'string',
+      category: 'string',
+      subcategory: 'string'
+    }
+    return recipe
+  }
+
+  private async getCategories (): Promise<Cheerio[]> {
     const categoryData: AxiosResponse = await Axios.get(`${BaseUrl}/categorias`)
     const $: CheerioStatic = Cheerio.load(categoryData.data)
   
@@ -28,4 +36,7 @@ export default {
     
     return data
   }
+  
 }
+
+export default new ScrapingService()
