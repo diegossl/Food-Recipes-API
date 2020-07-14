@@ -4,13 +4,23 @@ import Cheerio from 'cheerio'
 
 const BaseUrl = 'https://www.tudogostoso.com.br'
 
+interface Category {
+  categoryTitle: string
+  subcategoriesLinks: Array<string>
+}
+
 class ScrapingService {
 
   public async getRecipes (): Promise<IRecipe> {
-    const categories: Cheerio[] = await this.getCategories()
-    categories.map((category: Cheerio) => {
-      console.log(category)
-    })
+    const categories: Category[] = await this.getCategories()
+    categories[0].subcategoriesLinks
+      .map(async (link: string) => {
+        const categoryData: AxiosResponse = await Axios.get(`${BaseUrl}${link}`)
+        const $: CheerioStatic = Cheerio.load(categoryData.data)
+        const numPage: string = $('.page-title > .num').text()
+        //let numloop = Number(numPage.substr(0, numPage.length - 9)) / 15
+      })
+
     const recipe: IRecipe = {
       ingredients: ['string'],
       preparation: ['string'],
@@ -21,24 +31,25 @@ class ScrapingService {
     return recipe
   }
 
-  private async getCategories (): Promise<Cheerio[]> {
+  private async getCategories (): Promise<Category[]> {
     const categoryData: AxiosResponse = await Axios.get(`${BaseUrl}/categorias`)
     const $: CheerioStatic = Cheerio.load(categoryData.data)
-  
-    const data: Cheerio[] = $('.page-tags > .row')
+    const response: Category[] = $('.page-tags > .row')
       .map((index: number, category: CheerioElement) => {
-        const title: string = $(category).find('h2').text().replace(/\n/g, '')
-        const links: Cheerio[] = $(category)
-          .find('h3')
-          .map((index: number, subcategory: CheerioElement) => {
-            const link: string | undefined = $(subcategory).find('a').attr('href')
-            return link
-          }).get()
-        const response: unknown = { category: title, subcategories: links }
-        return response
-    }).get()
-    
-    return data
+        const categoryTitle: string = $(category).find('h2').text().replace(/\n/g, '')
+        const subcategoriesLinks: Array<string> = $(category)
+        .find('h3')
+        .map((index: number, subcategory: CheerioElement) => {
+          const link: string | undefined = $(subcategory).find('a').attr('href')
+          return link
+        }).get()
+        const data: Category = {
+          categoryTitle: categoryTitle,
+          subcategoriesLinks: subcategoriesLinks
+        }
+        return data
+      }).get()
+    return response
   }
   
 }
