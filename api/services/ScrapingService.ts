@@ -1,44 +1,43 @@
 import Axios, { AxiosResponse } from 'axios'
-import IGenre from '../interfaces/IGenre'
 import ISerie from '../interfaces/ISerie'
 import Cheerio from 'cheerio'
 
 const BaseUrl = 'http://www.adorocinema.com'
 
 class ScrapingService {
-  public async getSeriesInfo (seriesList) {
-  }
-
-  public async getSeriesPageLinks (genresList: IGenre[]) {
-    const links = genresList.map(async (genre: IGenre) => {
-      const pageData: AxiosResponse = await Axios.get(`${BaseUrl}${genre.genrePageLink}`)
+  public async getSeries (pageLinks: Array<string>) {
+    const response: Array<string> = []
+    for await (const pageLink of pageLinks) {
+      const pageData: AxiosResponse = await Axios.get(`${pageLink}`)
       const $: CheerioStatic = Cheerio.load(pageData.data)
-      const numPage: number = Math.trunc(genre.numSeries / 15) + 1
-      const seriesLinks = $('.gd-col-middle > ul')
-        .find('.mdl')
-        .map((index: number, serie: CheerioElement) => {
-          const serieLink: string | undefined = $(serie)
-            .find('.meta > .content-title > a')
-            .attr('href')
-          return serieLink
-        }).get()
-    })
+
+      const pageLinks: Array<string> = $('.gd-col-middle > ul')
+      .find('.mdl')
+      .map((index: number, serie: CheerioElement) => {
+        const pageLinks: string | undefined = $(serie).find('a').attr('href')
+        return pageLinks
+      }).get()
+
+      response.push(...pageLinks)
+    }
+    return response
   }
 
-  public async getGenres (): Promise<IGenre[]> {
+  public async getSeriesPageLinks (): Promise<string[]> {
     const pageData: AxiosResponse = await Axios.get(`${BaseUrl}/series-tv`)
     const $: CheerioStatic = Cheerio.load(pageData.data)
-    const genres: IGenre[] = $('.filter-entity-desktop > div:first-child')
-      .find('li')
-      .map((index: number, genre: CheerioElement) => {
-        const numSeries: string = $(genre).find('span').text().replace(/([()])/g,'')
-        const genrePageLink: string | undefined = $(genre).find('a').attr('href')
-        return {
-          numSeries: Number(numSeries),
-          genrePageLink: genrePageLink
-        }
-      }).get()
-    return genres
+
+    const maxNumPages: string = $('.pagination-item-holder').find(':last-child').text()
+    const numLoop: number = Math.trunc(parseInt(maxNumPages) / 15) + 1
+
+    const pageLinks: Array<string> = []
+
+    for (let index = 1; index <= numLoop; index++) {
+      const link = `${BaseUrl}/?page=${index}`
+      pageLinks.push(link)
+    }
+
+    return pageLinks
   }
 }
 
