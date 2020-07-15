@@ -1,8 +1,8 @@
 import express, { Router } from 'express'
-import RecipeController from '../api/RecipeController'
+import SerieController from '../api/SerieController'
 
 const router: Router = express.Router()
 
-router.get('/', RecipeController.getAllRecipes)
+router.get('/', SerieController.getSeries)
 
 export default router

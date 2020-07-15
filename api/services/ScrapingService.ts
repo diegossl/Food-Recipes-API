@@ -1,57 +1,45 @@
 import Axios, { AxiosResponse } from 'axios'
-import IRecipe from '../interfaces/IRecipe'
+import IGenre from '../interfaces/IGenre'
+import ISerie from '../interfaces/ISerie'
 import Cheerio from 'cheerio'
 
-const BaseUrl = 'https://www.tudogostoso.com.br'
-
-interface Category {
-  categoryTitle: string
-  subcategoriesLinks: Array<string>
-}
+const BaseUrl = 'http://www.adorocinema.com'
 
 class ScrapingService {
-
-  public async getRecipes (): Promise<IRecipe> {
-    const categories: Category[] = await this.getCategories()
-    categories[0].subcategoriesLinks
-      .map(async (link: string) => {
-        const categoryData: AxiosResponse = await Axios.get(`${BaseUrl}${link}`)
-        const $: CheerioStatic = Cheerio.load(categoryData.data)
-        const numPage: string = $('.page-title > .num').text()
-        //let numloop = Number(numPage.substr(0, numPage.length - 9)) / 15
-      })
-
-    const recipe: IRecipe = {
-      ingredients: ['string'],
-      preparation: ['string'],
-      additionalInformation: 'string',
-      category: 'string',
-      subcategory: 'string'
-    }
-    return recipe
+  public async getSeriesInfo (seriesList) {
   }
 
-  private async getCategories (): Promise<Category[]> {
-    const categoryData: AxiosResponse = await Axios.get(`${BaseUrl}/categorias`)
-    const $: CheerioStatic = Cheerio.load(categoryData.data)
-    const response: Category[] = $('.page-tags > .row')
-      .map((index: number, category: CheerioElement) => {
-        const categoryTitle: string = $(category).find('h2').text().replace(/\n/g, '')
-        const subcategoriesLinks: Array<string> = $(category)
-        .find('h3')
-        .map((index: number, subcategory: CheerioElement) => {
-          const link: string | undefined = $(subcategory).find('a').attr('href')
-          return link
+  public async getSeriesPageLinks (genresList: IGenre[]) {
+    const links = genresList.map(async (genre: IGenre) => {
+      const pageData: AxiosResponse = await Axios.get(`${BaseUrl}${genre.genrePageLink}`)
+      const $: CheerioStatic = Cheerio.load(pageData.data)
+      const numPage: number = Math.trunc(genre.numSeries / 15) + 1
+      const seriesLinks = $('.gd-col-middle > ul')
+        .find('.mdl')
+        .map((index: number, serie: CheerioElement) => {
+          const serieLink: string | undefined = $(serie)
+            .find('.meta > .content-title > a')
+            .attr('href')
+          return serieLink
         }).get()
-        const data: Category = {
-          categoryTitle: categoryTitle,
-          subcategoriesLinks: subcategoriesLinks
-        }
-        return data
-      }).get()
-    return response
+    })
   }
-  
+
+  public async getGenres (): Promise<IGenre[]> {
+    const pageData: AxiosResponse = await Axios.get(`${BaseUrl}/series-tv`)
+    const $: CheerioStatic = Cheerio.load(pageData.data)
+    const genres: IGenre[] = $('.filter-entity-desktop > div:first-child')
+      .find('li')
+      .map((index: number, genre: CheerioElement) => {
+        const numSeries: string = $(genre).find('span').text().replace(/([()])/g,'')
+        const genrePageLink: string | undefined = $(genre).find('a').attr('href')
+        return {
+          numSeries: Number(numSeries),
+          genrePageLink: genrePageLink
+        }
+      }).get()
+    return genres
+  }
 }
 
 export default new ScrapingService()
