@@ -7,7 +7,7 @@ Busca as séries mais populares do site AdoroCinema.
 Para executar o projeto, será necessário instalar as dependências digitando o seguinte comando no terminal:
 
 ```bash
-npm install
+yarn install
 ```
 
 Em seguida, crie um arquivo chamado **.env** e copie para ele o conteúdo do arquivo **.env.exemple**, que já existe no projeto, e coloque suas credenciais. Então digite o seguinte comando no terminal:
@@ -15,7 +15,7 @@ Em seguida, crie um arquivo chamado **.env** e copie para ele o conteúdo do arq
 Por fim, digite o seguinte comando no terminal para iniciar o servidor:
 
 ```bash
-npm dev
+yarn dev
 ```
 
 ### Uso
