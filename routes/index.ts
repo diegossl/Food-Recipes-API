@@ -3,6 +3,6 @@ import SerieController from '../api/SerieController'
 
 const router: Router = express.Router()
 
-router.get('/', SerieController.getSeries)
+router.get('/series', SerieController.getSeries)
 
 export default router

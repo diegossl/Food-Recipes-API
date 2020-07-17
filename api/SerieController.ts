@@ -7,10 +7,11 @@ import ScrapingService from './services/ScrapingService'
 
 export default {
   async getSeries (request: Request, response: Response): Promise<Response> {
-    await MongoDB.getConnection()
     try {
+      await MongoDB.getConnection()
+      
       const seriesFound: Document[] = await Serie.find({})
-      if (seriesFound) {
+      if (seriesFound.length != 0) {
         return response.status(200).send(seriesFound)
       }
       const series: ISerieInfo[] = await ScrapingService.getSeriesInfo()
