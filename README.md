@@ -1,32 +1,32 @@
-# Buscador de séries de TV mais populares
+# Searcher for the most popular TV series
 
-Busca as séries mais populares do site AdoroCinema.
+Search and collect data from the most popular series currently available on the AdoroCinema website.
 
 ## Setup
 
-Para executar o projeto, será necessário instalar as dependências digitando o seguinte comando no terminal:
+To execute the project, it will be necessary to install as dependencies by typing the following command in the terminal:
 
 ```bash
 yarn install
 ```
 
-Em seguida, crie um arquivo chamado **.env** e copie para ele o conteúdo do arquivo **.env.exemple**, que já existe no projeto, e coloque suas credenciais. Então digite o seguinte comando no terminal:
+Then, create a file called **.env** and copy to the contents of the file **.env.exemple**, which already exists in the project and enter your credentials. Then type the following command in the terminal:
 
-Por fim, digite o seguinte comando no terminal para iniciar o servidor:
+Finally, type the following command in the terminal to start the server:
 
 ```bash
 yarn dev
 ```
 
-### Uso
+### Use
 
-O sistema está pronto para ser usado na rota:
+The system is ready to be used on the route:
 
 [http://localhost:3000/series](http://localhost:3000/series)
 
-## Exemplo de saída de dados:
+## Example output:
 
-Um array de objetos JSON contendo caracteristicas da série de TV.
+An array of JSON objects containing features from the TV series.
  
 ```javascript
 [
@@ -50,6 +50,6 @@ Um array de objetos JSON contendo caracteristicas da série de TV.
 ]
 ```
 
-## Licença
+## License
 
 MIT
