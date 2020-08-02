@@ -10,7 +10,12 @@ To execute the project, it will be necessary to install as dependencies by typin
 yarn install
 ```
 
-Then, create a file called **.env** and copy to the contents of the file **.env.exemple**, which already exists in the project and enter your credentials. Then type the following command in the terminal:
+Then, create a file called **.env** and copy to the contents of the file **.env.exemple**, which already exists in the project and enter your credentials.
+
+Credentials can be obtained from the following website:
+
+[https://www.mongodb.com](https://www.mongodb.com)
+
 
 Finally, type the following command in the terminal to start the server:
 
@@ -23,6 +28,12 @@ yarn dev
 The system is ready to be used on the route:
 
 [http://localhost:3000/series](http://localhost:3000/series)
+
+## Example of data entry:
+
+```bash
+GET /series
+```
 
 ## Example output:
 
